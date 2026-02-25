@@ -107,6 +107,10 @@ export function ExportSheet(props: ExportSheetProps) {
                     class={`absolute inset-0 bg-black/50 backdrop-blur-[6px] pointer-events-auto transition-opacity duration-300
                         ${isVisible() ? 'opacity-100' : 'opacity-0'}`}
                     onClick={handleClose}
+                    onKeyDown={(e: KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleClose() } }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label="关闭导出面板"
                 />
 
                 {/* 弹窗 */}
