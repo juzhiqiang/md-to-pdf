@@ -7,8 +7,9 @@
         "dev": "vite",
         "build": "vite build",
         "preview": "vite preview",
-        "lint": "biome check src/",
-        "format": "biome format --write src/"
+        "lint": "pnpm exec biome check src/",
+        "format": "pnpm exec biome format --write src/",
+        "check": "pnpm exec biome check src/"
     },
     "dependencies": {
         "@codemirror/commands": "^6.10.2",

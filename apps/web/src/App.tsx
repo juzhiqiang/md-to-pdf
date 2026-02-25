@@ -29,8 +29,21 @@ export default function App() {
 
     // 全局粘贴事件监听（仅在 DropZone 状态下生效）
     const handlePaste = async (e: ClipboardEvent) => {
-        // 如果焦点在 textarea 中，不拦截
-        if ((e.target as HTMLElement)?.tagName === 'TEXTAREA') return
+        const target = e.target as HTMLElement
+        if (!target) return
+
+        // 如果焦点在可编辑元素中，不拦截原生粘贴行为
+        const tag = target.tagName
+        if (
+            tag === 'TEXTAREA' ||
+            tag === 'INPUT' ||
+            target.isContentEditable
+        ) {
+            return
+        }
+
+        // 仅在 DropZone 状态（编辑器未打开）时接管粘贴
+        if (isEditorOpen()) return
 
         const text = readFromPaste(e)
         if (text) {

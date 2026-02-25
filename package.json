@@ -8,10 +8,11 @@
     "build": "turbo run build",
     "lint": "turbo run lint",
     "format": "turbo run format",
-    "check": "biome check ."
+    "check": "turbo run check"
   },
   "packageManager": "pnpm@10.5.2",
   "devDependencies": {
+    "@biomejs/biome": "^2.4.4",
     "turbo": "^2.8.10"
   }
 }
