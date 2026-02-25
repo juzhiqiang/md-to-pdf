@@ -1,0 +1,18 @@
+{
+    "name": "@md-to-pdf/ui",
+    "version": "1.0.0",
+    "private": true,
+    "type": "module",
+    "main": "src/index.ts",
+    "scripts": {
+        "lint": "biome check src/",
+        "format": "biome format --write src/"
+    },
+    "peerDependencies": {
+        "solid-js": "^1.9.0"
+    },
+    "devDependencies": {
+        "solid-js": "^1.9.0",
+        "typescript": "^5.7.0"
+    }
+}

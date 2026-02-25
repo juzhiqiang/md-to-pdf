@@ -1,0 +1,17 @@
+{
+  "name": "md-to-pdf",
+  "private": true,
+  "version": "1.0.0",
+  "description": "🍎 Markdown 预览与 PDF 导出工具 — 基于品牌设计系统",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "format": "turbo run format",
+    "check": "biome check ."
+  },
+  "packageManager": "pnpm@10.5.2",
+  "devDependencies": {
+    "turbo": "^2.8.10"
+  }
+}

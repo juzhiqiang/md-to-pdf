@@ -1,0 +1,509 @@
+@import "tailwindcss";
+
+/* 扫描 monorepo 中的 workspace 包以检测 Tailwind 类名 */
+@source "../../packages/ui/src/**/*.tsx";
+@source "../../packages/core/src/**/*.ts";
+
+/*
+ * ═══════════════════════════════════════════════
+ * 🍎 品牌设计系统 v1.0 — Tailwind CSS v4 Theme
+ * ═══════════════════════════════════════════════
+ */
+
+@theme inline {
+  /* ─── 字体栈 (Typography) ─── */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Noto Sans SC',
+    'Microsoft YaHei', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', Consolas, monospace;
+  --font-display: 'Inter Display', 'Inter', sans-serif;
+
+  /* ─── 主色 (Primary) ─── */
+  --color-primary-50: #EEF2FF;
+  --color-primary-100: #E0E7FF;
+  --color-primary-200: #C7D2FE;
+  --color-primary-300: #A5B4FC;
+  --color-primary-400: #818CF8;
+  --color-primary-500: #6366F1;
+  --color-primary-600: #4F46E5;
+  --color-primary-700: #4338CA;
+  --color-primary-800: #3730A3;
+  --color-primary-900: #312E81;
+
+  /* ─── 中性色 (Gray) — 覆盖 Tailwind 默认 ─── */
+  --color-gray-50: #F9FAFB;
+  --color-gray-100: #F3F4F6;
+  --color-gray-200: #E5E7EB;
+  --color-gray-300: #D1D5DB;
+  --color-gray-400: #9CA3AF;
+  --color-gray-500: #6B7280;
+  --color-gray-600: #4B5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1F2937;
+  --color-gray-900: #111827;
+
+  /* ─── 语义色 (Semantic) ─── */
+  --color-success-50: #ECFDF5;
+  --color-success-500: #10B981;
+  --color-success-600: #059669;
+  --color-success-700: #047857;
+
+  --color-error-50: #FEF2F2;
+  --color-error-500: #EF4444;
+  --color-error-600: #DC2626;
+  --color-error-700: #B91C1C;
+
+  --color-warning-50: #FFFBEB;
+  --color-warning-500: #F59E0B;
+  --color-warning-700: #B45309;
+
+  --color-info-50: #EFF6FF;
+  --color-info-500: #3B82F6;
+  --color-info-700: #1D4ED8;
+
+  /* ─── 阴影系统 (Elevation) ─── */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+  /* ─── 圆角系统 (Border Radius) ─── */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+
+  /* ─── 自定义动画 ─── */
+  --animate-slide-in-right: slide-in-right 0.3s ease-out;
+  --animate-fade-in: fade-in 0.25s ease-out;
+  --animate-fade-in-up: fade-in-up 0.3s ease-out;
+}
+
+/*
+ * ═══════════════════════════════════════════════
+ * 手动补充 Tailwind v4 未自动生成的 primary/semantic 色彩工具类
+ * ═══════════════════════════════════════════════
+ */
+@layer utilities {
+
+  /* Background */
+  .bg-primary-50 {
+    background-color: #EEF2FF;
+  }
+
+  .bg-primary-100 {
+    background-color: #E0E7FF;
+  }
+
+  .bg-primary-200 {
+    background-color: #C7D2FE;
+  }
+
+  .bg-primary-300 {
+    background-color: #A5B4FC;
+  }
+
+  .bg-primary-400 {
+    background-color: #818CF8;
+  }
+
+  .bg-primary-500 {
+    background-color: #6366F1;
+  }
+
+  .bg-primary-600 {
+    background-color: #4F46E5;
+  }
+
+  .bg-primary-700 {
+    background-color: #4338CA;
+  }
+
+  .bg-primary-800 {
+    background-color: #3730A3;
+  }
+
+  .bg-primary-900 {
+    background-color: #312E81;
+  }
+
+  /* Text */
+  .text-primary-500 {
+    color: #6366F1;
+  }
+
+  .text-primary-600 {
+    color: #4F46E5;
+  }
+
+  .text-primary-700 {
+    color: #4338CA;
+  }
+
+  /* Border */
+  .border-primary-300 {
+    border-color: #A5B4FC;
+  }
+
+  .border-primary-500 {
+    border-color: #6366F1;
+  }
+
+  /* Ring */
+  .ring-primary-200 {
+    --tw-ring-color: #C7D2FE;
+  }
+
+  .ring-primary-300 {
+    --tw-ring-color: #A5B4FC;
+  }
+
+  /* Semantic: Error */
+  .bg-error-50 {
+    background-color: #FEF2F2;
+  }
+
+  .bg-error-500 {
+    background-color: #EF4444;
+  }
+
+  .bg-error-600 {
+    background-color: #DC2626;
+  }
+
+  .bg-error-700 {
+    background-color: #B91C1C;
+  }
+
+  .text-error-500 {
+    color: #EF4444;
+  }
+
+  .text-error-700 {
+    color: #B91C1C;
+  }
+
+  .border-error-500 {
+    border-color: #EF4444;
+  }
+
+  /* Semantic: Success */
+  .bg-success-50 {
+    background-color: #ECFDF5;
+  }
+
+  .bg-success-500 {
+    background-color: #10B981;
+  }
+
+  .text-success-500 {
+    color: #10B981;
+  }
+
+  .text-success-700 {
+    color: #047857;
+  }
+
+  .border-success-500 {
+    border-color: #10B981;
+  }
+
+  /* Semantic: Warning */
+  .bg-warning-50 {
+    background-color: #FFFBEB;
+  }
+
+  .bg-warning-500 {
+    background-color: #F59E0B;
+  }
+
+  .text-warning-500 {
+    color: #F59E0B;
+  }
+
+  .text-warning-700 {
+    color: #B45309;
+  }
+
+  .border-warning-500 {
+    border-color: #F59E0B;
+  }
+
+  /* Semantic: Info */
+  .bg-info-50 {
+    background-color: #EFF6FF;
+  }
+
+  .bg-info-500 {
+    background-color: #3B82F6;
+  }
+
+  .text-info-500 {
+    color: #3B82F6;
+  }
+
+  .text-info-700 {
+    color: #1D4ED8;
+  }
+
+  .border-info-500 {
+    border-color: #3B82F6;
+  }
+
+  /* Hover variants */
+  .hover\:bg-primary-50:hover {
+    background-color: #EEF2FF;
+  }
+
+  .hover\:bg-primary-100:hover {
+    background-color: #E0E7FF;
+  }
+
+  .hover\:bg-primary-300:hover {
+    background-color: #A5B4FC;
+  }
+
+  .hover\:bg-primary-600:hover {
+    background-color: #4F46E5;
+  }
+
+  .hover\:bg-error-600:hover {
+    background-color: #DC2626;
+  }
+
+  /* Active variants */
+  .active\:bg-primary-100:active {
+    background-color: #E0E7FF;
+  }
+
+  .active\:bg-primary-700:active {
+    background-color: #4338CA;
+  }
+
+  .active\:bg-error-700:active {
+    background-color: #B91C1C;
+  }
+
+  /* Focus ring variants */
+  .focus\:ring-primary-300:focus {
+    --tw-ring-color: #A5B4FC;
+  }
+
+  /* Border left for Toast/Alert */
+  .border-l-4 {
+    border-left-width: 4px;
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─── 全局基础样式 ─── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-gray-800);
+  background-color: var(--color-gray-50);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* ─── 滚动条自定义 (Mac OS 风格) ─── */
+::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(150, 150, 150, 0.3);
+  border-radius: 10px;
+  border: 4px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(150, 150, 150, 0.5);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(150, 150, 150, 0.3);
+  border-radius: 10px;
+  border: 4px solid transparent;
+  background-clip: content-box;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(150, 150, 150, 0.5);
+}
+
+/* ═══════════════════════════════════════════════
+ * @media print — PDF 导出专用打印样式
+ * 隐藏所有 UI 控件，仅保留 Markdown 预览区内容
+ * ═══════════════════════════════════════════════ */
+@media print {
+
+  /* 1. 全局重置：去除页面底色和多余边距 */
+  html,
+  body {
+    background: white !important;
+    color: #111827 !important;
+    font-size: 12pt;
+    line-height: 1.6;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* 2. 隐藏所有标记了 .no-print 的元素 */
+  .no-print {
+    display: none !important;
+  }
+
+  /* 3. 打破所有 flex/grid 布局约束，让 print-area 自由铺满 */
+  body>div,
+  body>div>*,
+  main,
+  main>div,
+  main>div>div,
+  main>div>div>div {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  /* 4. 预览区外层容器：去除所有装饰 */
+  .print-area,
+  .print-area>* {
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    background: white !important;
+  }
+
+  /* 5. markdown-body 排版优化 */
+  .markdown-body {
+    padding: 20px 40px !important;
+    max-width: 100% !important;
+    font-size: 12pt !important;
+    line-height: 1.7 !important;
+  }
+
+  /* 6. 优化打印分页 */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    page-break-after: avoid;
+  }
+
+  pre,
+  blockquote,
+  table {
+    page-break-inside: avoid;
+  }
+
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+
+  /* 7. 链接样式 */
+  a {
+    color: #111827 !important;
+    text-decoration: underline !important;
+  }
+
+  a::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+    color: #6B7280;
+  }
+
+  /* 8. 打印页面边距设定 */
+  @page {
+    size: A4;
+    margin: 15mm 10mm;
+  }
+}
