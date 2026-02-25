@@ -2,7 +2,7 @@
  * @md-to-pdf/ui — Toast 轻提示组件
  * 遵循 🍎 品牌设计系统 v1.0 通知规范 (Dynamic Island 风格)
  */
-import { createSignal, createEffect, onCleanup, Show } from 'solid-js'
+import { createSignal, Show } from 'solid-js'
 
 export type ToastType = 'info' | 'success' | 'warning' | 'error'
 
@@ -18,26 +18,26 @@ const getIcon = (type: ToastType) => {
     switch (type) {
         case 'success':
             return (
-                <svg class="w-4 h-4 text-success-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 text-success-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                 </svg>
             )
         case 'error':
             return (
-                <svg class="w-4 h-4 text-error-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 text-error-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             )
         case 'warning':
             return (
-                <svg class="w-4 h-4 text-warning-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 text-warning-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
             )
         case 'info':
         default:
             return (
-                <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
                 </svg>
             )
@@ -58,7 +58,7 @@ export function showToast(
     const id = ++toastId
     const toast: ToastMessage = { id, type, title, description, duration }
 
-    setToasts((prev) => [...prev.slice(-2), toast]) // 最多显示 3 条
+    setToasts((prev) => [...prev.slice(-2), toast])
 
     if (duration > 0) {
         setTimeout(() => {

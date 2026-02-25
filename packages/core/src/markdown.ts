@@ -23,7 +23,7 @@ const marked = new Marked(
     markedHighlight({
         emptyLangClass: 'hljs',
         langPrefix: 'hljs language-',
-        highlight(code: string, lang: string) {
+        highlight(code: string, _lang: string) {
             return escapeHtml(code)
         },
     }),

@@ -1,12 +1,13 @@
 /**
  * Editor — Markdown 编辑区
  * 左侧代码/文本编辑面板，带行号与实时更新
- * 
+ *
  * 优化：仅按需加载常用语言，而非全量导入 @codemirror/language-data
  */
 import { createEffect, onCleanup, onMount } from 'solid-js'
 import { EditorState } from "@codemirror/state"
-import { EditorView, keymap, lineNumbers, highlightActiveLineGutter, highlightActiveLine, ViewUpdate } from "@codemirror/view"
+import { EditorView, keymap, lineNumbers, highlightActiveLineGutter, highlightActiveLine } from "@codemirror/view"
+import type { ViewUpdate } from "@codemirror/view"
 import { markdown } from "@codemirror/lang-markdown"
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands"
 import { oneDark } from "@codemirror/theme-one-dark"
@@ -71,10 +72,12 @@ const appleTheme = EditorView.theme({
 })
 
 export function Editor(props: EditorProps) {
-    let editorContainerRef: HTMLDivElement
+    let editorContainerRef: HTMLDivElement | undefined
     let view: EditorView | undefined
 
     onMount(() => {
+        if (!editorContainerRef) return
+
         const state = EditorState.create({
             doc: props.value,
             extensions: [
@@ -118,7 +121,7 @@ export function Editor(props: EditorProps) {
     return (
         <div class="flex flex-col no-print overflow-hidden bg-[#1e1e1e] h-full shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-gray-800/50 rounded-2xl hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
             {/* Mac 风格编辑器头部 */}
-            <div class="flex items-center !px-5 h-12 bg-[#252526] border-b border-[#333333]">
+            <div class="flex items-center px-5 h-12 bg-[#252526] border-b border-[#333333]">
                 <div class="flex items-center gap-2">
                     <div class="w-3 h-3 rounded-full bg-[#ff5f56] border border-[#e0443e] hover:bg-[#ff5f56]/80 transition-colors"></div>
                     <div class="w-3 h-3 rounded-full bg-[#ffbd2e] border border-[#dea123] hover:bg-[#ffbd2e]/80 transition-colors"></div>
@@ -127,14 +130,14 @@ export function Editor(props: EditorProps) {
                 <div class="flex-1 flex justify-center">
                     <span class="text-[11px] font-semibold text-gray-400 tracking-wider uppercase whitespace-nowrap">Markdown Editor</span>
                 </div>
-                <div class="w-12"></div>{/* Spacer for centering */}
+                <div class="w-12"></div>
             </div>
 
             {/* 编辑区域 */}
             <div class="flex-1 overflow-hidden relative group">
                 <div class="absolute inset-0 pointer-events-none shadow-[inset_0_0_40px_rgba(0,0,0,0.2)]"></div>
                 <div
-                    ref={editorContainerRef!}
+                    ref={editorContainerRef}
                     class="w-full h-full custom-scrollbar text-[15px] leading-relaxed"
                 />
             </div>

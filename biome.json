@@ -7,10 +7,18 @@
             "*.json"
         ]
     },
+    "css": {
+        "parser": {
+            "tailwindDirectives": true
+        }
+    },
     "linter": {
         "enabled": true,
         "rules": {
-            "recommended": true
+            "recommended": true,
+            "complexity": {
+                "noImportantStyles": "warn"
+            }
         }
     },
     "formatter": {

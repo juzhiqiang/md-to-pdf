@@ -97,7 +97,7 @@ export default function App() {
                     onExportClick={() => setIsExportSheetOpen(true)}
                 />
 
-                <main class="flex-1 min-h-0 !px-[10px] !py-[10px] mx-auto w-full px-6 sm:px-8 md:px-10 lg:px-12 xl:px-16 2xl:px-24 max-w-[2560px] py-6">
+                <main class="flex-1 min-h-0 px-2.5 py-2.5 mx-auto w-full max-w-[2560px]">
                     <div class="grid gap-5 sm:gap-6 h-full grid-cols-1 lg:grid-cols-2">
                         <div class="no-print h-full min-h-0">
                             <Editor value={markdown()} onChange={setMarkdown} />
