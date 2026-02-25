@@ -18,29 +18,33 @@ export default function App() {
     const [isLoading, setIsLoading] = createSignal(false)
     const [isExportSheetOpen, setIsExportSheetOpen] = createSignal(false)
 
-    const triggerLoadingTransition = async (callback: () => void) => {
+    // 使用可取消的 loading 计数器，避免并发竞态
+    let loadingTimer: ReturnType<typeof setTimeout> | null = null
+
+    const triggerLoadingTransition = (callback: () => void) => {
+        // 取消上一次尚未完成的 loading
+        if (loadingTimer) {
+            clearTimeout(loadingTimer)
+            loadingTimer = null
+        }
         setIsLoading(true)
-        await new Promise(r => setTimeout(r, 400))
-        callback()
-        setIsLoading(false)
+        loadingTimer = setTimeout(() => {
+            loadingTimer = null
+            callback()
+            setIsLoading(false)
+        }, 400)
     }
 
     // 全局粘贴事件监听（仅在 DropZone 状态下生效）
-    const handlePaste = async (e: ClipboardEvent) => {
+    const handlePaste = (e: ClipboardEvent) => {
         const target = e.target as HTMLElement
         if (!target) return
 
-        // 如果焦点在可编辑元素中，不拦截原生粘贴行为
         const tag = target.tagName
-        if (
-            tag === 'TEXTAREA' ||
-            tag === 'INPUT' ||
-            target.isContentEditable
-        ) {
+        if (tag === 'TEXTAREA' || tag === 'INPUT' || target.isContentEditable) {
             return
         }
 
-        // 仅在 DropZone 状态（编辑器未打开）时接管粘贴
         if (isEditorOpen()) return
 
         const text = readFromPaste(e)
@@ -58,6 +62,11 @@ export default function App() {
 
     onCleanup(() => {
         document.removeEventListener('paste', handlePaste)
+        // 清理未完成的 loading 定时器
+        if (loadingTimer) {
+            clearTimeout(loadingTimer)
+            loadingTimer = null
+        }
     })
 
     const handleContent = (content: string) => {
@@ -76,7 +85,6 @@ export default function App() {
         <div class="h-screen w-full flex flex-col overflow-hidden bg-gray-50">
             <ToastContainer />
 
-            {/* 当处于加载状态时，展示平滑骨架覆盖层 */}
             <Show when={isLoading()}>
                 <Skeleton />
             </Show>
@@ -89,15 +97,11 @@ export default function App() {
                     onExportClick={() => setIsExportSheetOpen(true)}
                 />
 
-                {/* 主工作区 */}
                 <main class="flex-1 min-h-0 !px-[10px] !py-[10px] mx-auto w-full px-6 sm:px-8 md:px-10 lg:px-12 xl:px-16 2xl:px-24 max-w-[2560px] py-6">
                     <div class="grid gap-5 sm:gap-6 h-full grid-cols-1 lg:grid-cols-2">
-                        {/* 左栏 — 编辑器 */}
                         <div class="no-print h-full min-h-0">
                             <Editor value={markdown()} onChange={setMarkdown} />
                         </div>
-
-                        {/* 右栏 — 预览 */}
                         <div class="h-full min-h-0">
                             <Preview markdown={markdown()} />
                         </div>

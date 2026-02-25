@@ -10,7 +10,6 @@ export function exportToPdf(filename?: string): void {
         document.title = filename
     }
     window.print()
-    // 打印完成后恢复原来的标题
     if (filename) {
         document.title = originalTitle
     }
@@ -18,22 +17,27 @@ export function exportToPdf(filename?: string): void {
 
 /** 复制文本到剪贴板 */
 export async function copyToClipboard(text: string): Promise<boolean> {
-    try {
-        await navigator.clipboard.writeText(text)
-        return true
-    } catch {
-        // Fallback: 使用旧版 execCommand
+    // 优先使用现代 Clipboard API
+    if (navigator.clipboard?.writeText) {
         try {
-            const textarea = document.createElement('textarea')
-            textarea.value = text
-            textarea.style.cssText = 'position:fixed;left:-9999px;top:-9999px;opacity:0'
-            document.body.appendChild(textarea)
-            textarea.select()
-            document.execCommand('copy')
-            document.body.removeChild(textarea)
+            await navigator.clipboard.writeText(text)
             return true
         } catch {
-            return false
+            // 降级到 execCommand
         }
+    }
+
+    // Fallback: 使用 textarea + execCommand 并检查返回值
+    try {
+        const textarea = document.createElement('textarea')
+        textarea.value = text
+        textarea.style.cssText = 'position:fixed;left:-9999px;top:-9999px;opacity:0'
+        document.body.appendChild(textarea)
+        textarea.select()
+        const success = document.execCommand('copy')
+        document.body.removeChild(textarea)
+        return success // 之前硬编码 true，现在检查实际返回值
+    } catch {
+        return false
     }
 }

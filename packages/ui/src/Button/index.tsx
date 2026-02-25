@@ -16,6 +16,7 @@ export interface ButtonProps extends ParentProps {
     icon?: JSX.Element
     onClick?: () => void
     class?: string
+    [key: string]: unknown // 允许任意 aria-*/data-* 原生属性透传
 }
 
 const variantClasses: Record<ButtonVariant, string> = {
@@ -61,6 +62,7 @@ export function Button(props: ButtonProps) {
         ${variantClasses[variant()]} ${sizeClasses[size()]} ${local.class || ''}`}
             disabled={isDisabled()}
             onClick={() => local.onClick?.()}
+            {...rest}
         >
             {local.loading ? (
                 <svg
@@ -68,6 +70,7 @@ export function Button(props: ButtonProps) {
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
+                    aria-hidden="true"
                 >
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
                     <path

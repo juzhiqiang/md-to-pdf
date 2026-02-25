@@ -40,7 +40,7 @@ export function readFromPaste(event: ClipboardEvent): string | null {
     return text && text.trim().length > 0 ? text : null
 }
 
-/** 触发文件选择对话框 */
+/** 触发文件选择对话框（统一使用 isMarkdownFile 校验） */
 export function openFileDialog(): Promise<string | null> {
     return new Promise((resolve) => {
         const input = document.createElement('input')
@@ -53,6 +53,13 @@ export function openFileDialog(): Promise<string | null> {
                 resolve(null)
                 return
             }
+
+            // 二次校验文件格式（与拖拽路径行为一致）
+            if (!isMarkdownFile(file)) {
+                resolve(null)
+                return
+            }
+
             try {
                 const text = await readFileAsText(file)
                 resolve(text)
