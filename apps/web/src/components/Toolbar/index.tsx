@@ -45,15 +45,13 @@ export function Toolbar(props: ToolbarProps) {
             <div class="w-full h-14 mx-auto px-6 sm:px-8 md:px-10 lg:px-12 xl:px-16 2xl:px-24 max-w-[2560px]">
                 <div class="w-full h-full flex items-center justify-between px-5">
                     {/* 左侧 Logo */}
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-inner">
-                            <span class="text-white text-sm font-bold font-display">M</span>
-                        </div>
+                    <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity cursor-pointer decoration-none">
+                        <img src="/logo.png" alt="MD-to-PDF Logo" class="w-8 h-8 rounded-lg shadow-sm object-contain" />
                         <div>
                             <h1 class="text-sm font-semibold leading-tight tracking-tight text-gray-800">MD-to-PDF</h1>
                             <p class="text-[10px] leading-tight font-medium text-gray-500">预览与导出</p>
                         </div>
-                    </div>
+                    </a>
 
                     {/* 右侧操作按钮 */}
                     <div class="flex items-center gap-1.5">
