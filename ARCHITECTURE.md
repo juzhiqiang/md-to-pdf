@@ -1,6 +1,6 @@
 # 🍎 MD-to-PDF — 项目架构文档
 
-> **Tech Stack**: SolidJS · Tailwind CSS · Less · BiomeJS · pnpm Workspace · Turborepo
+> **Tech Stack**: SolidJS · Tailwind CSS v4 · Less · BiomeJS v2.4 · pnpm Workspace · Turborepo
 > **Type**: 纯客户端应用 (Zero Backend)
 > **Design System**: 🍎 品牌设计系统 v1.0
 
@@ -8,122 +8,96 @@
 
 ## 目录结构
 
-```
+```text
 md-to-pdf/
 ├── apps/
 │   └── web/                          # 主前端应用 (SolidJS + Vite)
 │       ├── src/
-│       │   ├── App.tsx               # 主入口，双栏布局
+│       │   ├── App.tsx               # 主入口，状态协调与双栏布局
 │       │   ├── index.tsx             # SolidJS 渲染入口
-│       │   ├── index.css             # 全局样式 + Tailwind 指令
-│       │   ├── components/
-│       │   │   ├── Editor/           # Markdown 编辑区域
-│       │   │   ├── Preview/          # Markdown 实时预览区
-│       │   │   ├── Toolbar/          # 悬浮操作栏（导出/清空/复制）
-│       │   │   └── DropZone/         # 初始拖拽/上传/粘贴区域
+│       │   ├── index.css             # Tailwind v4 全局指令与主题配置
+│       │   ├── components/           # 业务组件
+│       │   │   ├── Editor/           # CodeMirror 6 编辑器 (按需加载语言)
+│       │   │   ├── Preview/          # Markdown 渲染预览区
+│       │   │   ├── Toolbar/          # 顶部动作栏 (导出/复制/清空)
+│       │   │   ├── DropZone/         # 初始上传/拖拽/粘贴引导区
+│       │   │   ├── Skeleton/         # 加载骨架屏
+│       │   │   └── ExportSheet/      # 导出详情配置面板 (Apple 风格)
 │       │   └── styles/
-│       │       └── print.less        # @media print 专用打印样式
-│       ├── index.html
-│       ├── vite.config.ts
-│       ├── tailwind.config.js
+│       │       └── print.less        # @media print 专用打印样式优化
+│       ├── vite.config.ts            # Vite 配置 (含 manualChunks 分包策略)
 │       └── package.json
 │
 ├── packages/
-│   ├── ui/                           # UI 组件库（跨应用复用）
+│   ├── ui/                           # 共享 UI 组件库 (跨框架风格统一)
 │   │   ├── src/
-│   │   │   ├── Button/
-│   │   │   ├── Card/
-│   │   │   ├── Toast/
-│   │   │   └── index.ts              # 统一导出
-│   │   ├── tailwind.config.base.js   # 🍎 设计系统 → Tailwind Theme
+│   │   │   ├── Button/               # 语义化按钮 (支持 Loading/Icon/透传)
+│   │   │   ├── Card/                 # 交互式卡片 (支持 A11y 键盘操作)
+│   │   │   ├── Toast/                # Dynamic Island 风格全局通知
+│   │   │   └── index.ts              # 统一导出入口
 │   │   └── package.json
 │   │
-│   └── core/                         # 核心逻辑库（纯 TypeScript）
+│   └── core/                         # 核心业务逻辑库 (TypeScript)
 │       ├── src/
-│       │   ├── file.ts               # FileReader / 拖拽 / 粘贴
-│       │   ├── markdown.ts           # Markdown → HTML 转换
-│       │   ├── pdf.ts                # PDF 导出（print 封装）
+│       │   ├── file.ts               # 文件系统 I/O (FileReader/Validator)
+│       │   ├── markdown.ts           # 解析引擎 (Marked + DOMPurify + Whitelist)
+│       │   ├── pdf.ts                # PDF 生成 (window.print 封装 + 剪贴板)
 │       │   └── index.ts
 │       └── package.json
 │
-├── biome.json                        # BiomeJS（替代 ESLint + Prettier）
-├── turbo.json                        # Turborepo 任务编排
-├── pnpm-workspace.yaml               # pnpm Monorepo 声明
-├── package.json                      # 根 package.json
-└── ARCHITECTURE.md                   # 本文件
+├── biome.json                        # Biome 配置 (含 Tailwind v4 适配)
+├── turbo.json                        # Turborepo 任务流配置
+├── pnpm-workspace.yaml               # pnpm Monorepo 成员声明
+└── package.json                      # 根依赖管理
 ```
 
 ---
 
-## 技术选型说明
+## 核心设计决策 (Architecture Decisions)
 
-### 1. SolidJS
-- **为什么不用 React？** SolidJS 的响应式系统零 Virtual DOM 开销，对于实时的 Markdown 预览这种高频更新场景有天然性能优势。
-- 使用 `createSignal` / `createEffect` 管理编辑器与预览区的数据流。
+### 1. 响应式与性能 (SolidJS + manualChunks)
+- **零 Virtual DOM**: 利用 SolidJS 的细粒度响应式，确保在输入海量 Markdown 内容时，预览区的更新开销最小。
+- **分包策略**: 针对 CodeMirror 核心库及其 130+ 语言包，我们在 `vite.config.ts` 中配置了 `manualChunks`。CodeMirror 核心被拆分为独立 chunk，而具体语言包（如 JavaScript, Python）则通过 `LanguageDescription.of()` 实现**全自动动态加载**，大幅降低了首屏 `DropZone` 的 bundle 体积。
 
-### 2. Tailwind CSS + Less
-- **Tailwind CSS**：用于快速构建响应式布局与交互状态（hover、focus 等）。
-- **Less**：用于编写复杂的组件样式、嵌套规则和 `@media print` 等高级样式场景。
-- 🍎 设计系统中的色板、间距、字号等将被注册为 Tailwind `theme.extend` 配置项，确保全局统一。
+### 2. 安全性保障 (XSS Defense)
+- **多层防护**: `parseMarkdown` 流程集成了 **DOMPurify** 进行 HTML 消毒。
+- **沙箱化代码块**: 代码高亮模块通过 `safeLang()` 正则白名单过滤 `lang` 参数，防止通过 Markdown 属性注入恶意脚本。
 
-### 3. BiomeJS
-- **替代 ESLint + Prettier**：单一工具完成代码校验与格式化，配置零碎感大幅降低。
-- 性能极快（Rust 编写），对 Monorepo 友好。
+### 3. 可访问性 (Accessibility by Default)
+- **语义化增强**: 所有交互元素（如 `ExportSheet` 遮罩、`Card`）均实现了 `role="button"`、`tabIndex={0}` 以及键盘 `Enter/Space` 事件处理，确保屏幕阅读器和键盘用户体验。
+- **ARIA 规范**: 装饰性图标统一标记 `aria-hidden="true"`，交互面板使用 `role="dialog"` 与 `aria-modal`。
 
-### 4. Monorepo (pnpm + Turborepo)
-- **pnpm workspace**：高效的依赖管理与磁盘空间节省。
-- **Turborepo**：智能任务编排、增量构建缓存。
+### 4. 健壮性与稳定性 (Robustness)
+- **竞态控制**: `App.tsx` 使用可取消的 `loadingTimer` 机制，防止由于快速切换状态导致的异步回调污染。
+- **资源清理**: `ExportSheet` 组件引入了 `safeTimeout` 模式，在组件卸载或面板关闭时自动清理所有活跃定时器，杜绝内存泄漏和意外状态更新。
+
+### 5. 样式系统 (Tailwind v4 + Design Tokens)
+- **全 CSS 驱动**: 采用 Tailwind v4，移除了 JS 配置文件。主题 Token（颜色、字体、阴影）在 `index.css` 的 `@theme` 块中统一定义。
+- **打印优化**: `print.less` 通过 `@media print` 针对 A4 纸张进行排版缩放、背景着色补偿（`print-color-adjust`）以及非必要元素（如按钮）的自动隐藏。
 
 ---
 
-## 核心功能流程
+## 核心技术链路图
 
-```
-┌───────────────────────────────────────────┐
-│             用户输入层                      │
-│  ┌──────────┐ ┌──────────┐ ┌────────────┐ │
-│  │ 粘贴文本  │ │ 拖拽文件  │ │ 选择.md文件│ │
-│  └─────┬────┘ └─────┬────┘ └──────┬─────┘ │
-│        └────────────┼─────────────┘       │
-│                     ▼                     │
-│        ┌────────────────────┐             │
-│        │  @md-to-pdf/core   │             │
-│        │  文件读取 + 解析     │             │
-│        └─────────┬──────────┘             │
-│                  ▼                        │
-│        ┌────────────────────┐             │
-│        │  Markdown → HTML   │             │
-│        │  marked + highlight│             │
-│        └─────────┬──────────┘             │
-│                  ▼                        │
-│  ┌───────────────────────────────────┐    │
-│  │        apps/web 主视图             │    │
-│  │  ┌──────────┐  ┌──────────────┐   │    │
-│  │  │ 编辑器区  │  │ 实时预览区    │   │    │
-│  │  │ (左栏)    │  │ (右栏/白纸)  │   │    │
-│  │  └──────────┘  └──────────────┘   │    │
-│  │         ┌──────────────┐          │    │
-│  │         │  悬浮工具栏    │          │    │
-│  │         │ [导出PDF][复制]│          │    │
-│  │         └──────┬───────┘          │    │
-│  └────────────────┼──────────────────┘    │
-│                   ▼                       │
-│          window.print()                   │
-│          @media print 样式优化             │
-│          → 生成高清矢量 PDF                │
-└───────────────────────────────────────────┘
+```mermaid
+graph TD
+    A[用户输入: 拖拽/粘贴/点击] --> B(@md-to-pdf/core: file.ts)
+    B -->|格式校验| C{是否合法?}
+    C -- 否 --> D(UI: showToast 报错)
+    C -- 是 --> E(App.tsx: 设置 Markdown 状态)
+    E --> F(@md-to-pdf/core: markdown.ts)
+    F -->|Marked 解析| G[HTML 字符串]
+    G -->|DOMPurify 消毒| H[安全 HTML]
+    H --> I(UI: Preview 预览展示)
+    E --> J(UI: Editor 实时编辑)
+    K[导出指令] --> L(@md-to-pdf/core: pdf.ts)
+    L -->|window.print| M[生成高清 PDF]
 ```
 
 ---
 
-## 🍎 设计系统映射
+## 质量闸门 (Quality Gate)
 
-| 设计系统 Token      | 应用场景                                |
-|--------------------|-----------------------------------------|
-| Primary-500 `#6366F1` | 主按钮、链接、选中态高亮                   |
-| Gray-50 ~ Gray-900  | 编辑器背景、文字层级、边框                  |
-| T2 ~ T9 字体比例     | Markdown `h1`-`h6`、正文、注释等            |
-| 8px 间距系统          | 所有组件内外边距、行间距                    |
-| shadow-sm ~ shadow-xl| 卡片层级、弹窗、悬浮工具栏                  |
-| radius-md (8px)      | 按钮、输入框圆角                           |
-| radius-lg (12px)     | 卡片、模态框圆角                           |
+项目使用 **BiomeJS v2.4** 作为统一的工具链，其配置重点在于：
+- **Tailwind 适配**: 开启 `css.parser.tailwindDirectives` 以支持 v4 语法。
+- **规则分级**: 将 `noImportantStyles` 设为 `warn` 以包容打印样式的正常需求，同时保持其余 Linter 规则为 `Error` 级别，确保 CI/CD 流程的严谨。
