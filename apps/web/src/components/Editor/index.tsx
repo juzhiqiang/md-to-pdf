@@ -121,7 +121,7 @@ export function Editor(props: EditorProps) {
     return (
         <div class="flex flex-col no-print overflow-hidden bg-[#1e1e1e] h-full shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-gray-800/50 rounded-2xl hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
             {/* Mac 风格编辑器头部 */}
-            <div class="flex items-center px-5 h-12 bg-[#252526] border-b border-[#333333]">
+            <div class="flex items-center !px-5 h-12 bg-[#252526] border-b border-[#333333]">
                 <div class="flex items-center gap-2">
                     <div class="w-3 h-3 rounded-full bg-[#ff5f56] border border-[#e0443e] hover:bg-[#ff5f56]/80 transition-colors"></div>
                     <div class="w-3 h-3 rounded-full bg-[#ffbd2e] border border-[#dea123] hover:bg-[#ffbd2e]/80 transition-colors"></div>

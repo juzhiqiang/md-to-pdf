@@ -57,7 +57,7 @@ export function Button(props: ButtonProps) {
         <button
             type="button"
             class={`inline-flex items-center justify-center transition-all duration-200 ease-out cursor-pointer
-        focus:outline-none focus:ring-2 focus:ring-primary-300 focus:ring-offset-2
+        focus:outline-none focus:ring-2 focus:ring-primary-300 focus:ring-offset-2 !px-[10px]
         disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none
         ${variantClasses[variant()]} ${sizeClasses[size()]} ${local.class || ''}`}
             disabled={isDisabled()}
